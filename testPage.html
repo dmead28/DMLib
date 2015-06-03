@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DMLib Example</title>
+    <link rel="stylesheet" type="text/css" href="dmlib.css" />
+    
+    <script type="text/javascript" src="dmlib.core.js"></script>
+    <script type="text/javascript" src="Box.js"></script>
+    
+    <script type="text/javascript">
+        
+    window.onload = function() {
+        var boxA = dm("boxA")
+        var boxB = dm("boxB")
+        var doug = dm("doug")
+        
+        var button = dm("button")
+        button.onClick(function(DMe){
+            if (boxA.hasPerson) {
+                alert("break")
+                boxA.removePerson()
+                alert("break")
+                boxB.addPerson(doug)
+                alert("break")
+            } else {
+                personMove = boxB.removePerson()
+                boxA.addPerson(personMove)
+            }
+        })
+    }
+    
+    
+    dm.createClass("DMButton")
+    dm.extend("DMButton","DMElement")
+    
+    dm.createClass("Box")
+    dm.extend("Box","DMElement")
+    dmc("Box").prototype.main = function() {
+        this.hasPerson = false
+        this.person = null
+    }
+    dmc("Box").prototype.addPerson = function(person) {
+        this.style().backgroundColor = "#9F9"
+        this.appendChild(person)
+        this.hasPerson = true
+        this.person = person
+    }
+    dmc("Box").prototype.removePerson = function() {
+        this.style().backgroundColor = "#99F"
+        this.hasPerson = false
+        
+        person = this.person
+        this.person = null
+        
+        return person
+    }
+    
+    
+    </script>
+</head>
+
+<body>
+    
+    <div id="DMApp">
+        <div id="boxA" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="boxB" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="doug" class="Person">Doug</div>
+        <div id="button" class="DMButton">Switch</div>
+    </div>
+    
+    
+</div>
+
+</body>
+</html>

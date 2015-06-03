@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DMLib Example</title>
+    <link rel="stylesheet" type="text/css" href="dmlib.css" />
+    
+    <script type="text/javascript" src="dmlib.core.js"></script>
+    <script type="text/javascript" src="Box.js"></script>
+    
+    <script type="text/javascript">
+        
+    window.onload = function() {
+        DMApp = dm("DMApp")
+        
+        dm.createClass("Box")
+        
+        dm.extend("Box","DMElement")
+        
+        dm.type("Box","div")
+        dm.main("Box", function() {
+            alert("Main")
+        })
+        
+        dm.method("Box", "addPerson", function() {
+            alert("ADD")
+        })
+        
+        boxA = _new("Box",{
+            idNum: "1",
+            DMClass: "Box",
+            type: "div"
+        })
+        boxA.addPerson()
+        boxA.speak()
+        
+        boxB = dm("boxB")
+        boxB.addPerson()
+        boxB.speak()
+        
+        dm.createDME("Person","div",function(args){
+            this.name = args
+            this.displayName()
+        })
+        dm.method("Person","displayName",function(){
+            this.innerHTML(this.name)
+        })
+        
+        doug = dm("doug","doug")
+        
+        mead = _new("Person","Mead")
+        mead.speak()
+        doug.speak()
+        DMApp.appendChild(mead)
+        DMApp.appendChild(boxA)
+        
+    }
+        
+    blah = function() {
+        /*
+        var DMHelloWorld = _new("DMElement",{
+            type: "div",
+            idNum: "1",
+            DMClass: "HelloClass"
+        })
+        DMHelloWorld.innerHTML("hello, OOP world")
+        //alert("break")
+        DMApp = dm("DMApp")
+        //alert(DMApp)
+        DMApp.appendChild(DMHelloWorld)
+        
+        DMApp.style().backgroundColor = "#BBB"
+        DMHelloWorld.style().display = "inline"
+        DMHelloWorld.style().border = "1px solid #222"
+        */
+        /*
+        var newDiv = new DMElement({
+            id: "newDiv"
+        })
+        
+        newDiv.addRelativeWrap()
+        newDiv.add(DMHelloWorld)
+        DMHelloWorld.style().right = "10px"
+        */
+        /*
+        dm.createClass("foo")
+        dmc("foo").prototype.speak = function() {
+            alert("hi")
+        }
+        */
+        //DMApp = dm("DMApp")
+        dm.createClass("Box")
+        //Box = dm.createClass("Box")
+        dm.extend("Box","DMElement")
+        //Box = dm.extend("Box","DMElement")
+        /*
+        function Box(args) {
+            //codestuff
+        }
+        */
+        dm.method("Box", "addPerson", function() {
+            alert("ADD")
+            this.style().backgroundColor = "#9F9"
+            this.appendChild(person)
+            this.hasPerson = true
+        })
+        dm.method("Box", "init", function() {
+            alert("init")
+            this.style().backgroundColor = "#9F9"
+            this.appendChild(person)
+            this.hasPerson = true
+        })
+        /*
+        Box.prototype.addPerson = function(person) {
+            this.style().backgroundColor = "#9F9"
+            this.appendChild(person)
+            this.hasPerson = true
+        }
+        */
+        /*
+        Box.prototype.init = function(_args) {
+            alert("init")
+            DMElement.call(this,{
+                idNum: _args.idNum,
+                DMClass: "Box",
+                type: "div"
+            })
+        }
+        Box.prototype.innerHTML = function (_args) {
+            alert("Hi")
+        }
+        */
+        boxA = _new("Box")
+        boxA.addPerson()
+        boxA.innerHTML("bba")
+        
+        
+        /*
+        _cls["Box"] = Box
+        alert(JSON.stringify(_cls["Box"].prototype))
+        */
+        /*
+        Box.prototype.main = dm.override("DMElement","main",function(){
+            //nothing
+        })
+        */
+        /*
+        Person = dm.createClass("Person")
+        Person = dm.extend("Person","DMElement")
+        /*
+        Person.prototype.main = dm.override("DMElement","main",function(){
+            this.backInTime()
+        })
+        */
+        /*
+        Person.prototype.main = dm.main(function(){
+            //alert("person")
+            this.backInTime()
+        })
+        Person.prototype.backInTime = function() {
+            this.innerHTML("<blink>"+this.innerHTML()+"</blink>")
+            this.style().backgroundColor = "red" //since most browsers don't acknowledge the blink tag
+        }
+        
+        
+        boxA = dm("boxA")
+        boxB = dm("boxB")
+        doug = dm("doug") //not defined, so this will have DMElement methods
+        boxC = _new("Box",{idNum: "2"})
+        */
+        /*
+        boxC = _new("Box",{
+            idNum: "1"
+        })
+        */
+        /*
+        boxC.innerHTML("HEY")
+        boxC.style().height = "50px"
+        boxC.style().width = "50px"
+        boxC.style().backgroundColor = "#99C"
+        
+        DMApp.appendChild(boxC)
+        boxB.addPerson(doug)
+        */
+        /*
+        boxPerson = dm.cast("boxA","Person")
+        boxA.addPerson(doug)
+        boxPerson.backInTime()
+        */
+        /*
+        Box.prototype.main = dm.main(function(){
+            this.hasPerson = false
+        })
+        
+        Box.prototype.removePerson = function() {
+            this.innerHTML("")
+            this.style().backgroundColor = "#99C"
+            this.hasPerson = false
+        }
+        
+        toggleButton = dm("buttonA")
+        toggleButton.onClick(function(dme){
+            if (boxA.hasPerson) {
+                boxA.removePerson()
+                boxB.addPerson(doug)
+            } else {
+                boxB.removePerson()
+                boxA.addPerson(doug)
+            }
+        })
+        */
+    }
+    </script>
+</head>
+
+<body>
+
+<div>
+<div id="p1">
+    
+    Ok, so first, the basics.
+    DMElement is a wrapper for a DOM element of any type. For example, to make a div:
+    
+    <code>
+        var DMHelloWorld = new DMElement({
+            type: "div",
+            idNum: "1",
+            DMClass: "HelloClass"
+        })
+        DMHelloWorld.innerHTML("hello, world")
+    </code>
+    
+    Output becomes a div with attributes:
+    &ltdiv id="HelloClass_1" DMClass="HelloClass"&gthey&lt/div&gt
+    
+    Note that this element combines the DMClass and the idNum to make the ID. This is due to DMLib's status as an OOP-first language and is geared
+    towards apps with many instances of the same class. The default will be a timestamp of milliseconds since January 1st, 1970
+    
+    ..and yes, every object must have a class and ID (default is DMElement if undefined). This will come in handy later when we go into the
+    database backing, as well as with the back-end processing for click events. It also will be used to keep subview consistency.
+    
+    ANYWAYS, this HelloClass_1 doesn't have a place in the page. Now that we have the element, we have to put it somewhere.
+    
+    In our html, we should have an element, such as:
+    
+    &ltdiv id="DMApp"&gt&lt/div&gt
+    
+    which serves as the container for our entire app. Note that this does not need a class. Only programmatic instances must follow the
+    DMClass_idNum convention.
+    
+    This is where the app lives. To use this in an equivelant to document.getElementByID(), use DMElement with id as the argument
+    DMElement(obj$id)
+    Then, append the DMHelloWorld element to the app.
+    (Note: we will learn some more complex ways to do this. This simply gets the element with basic DMElement methods)
+    
+    <code>
+        DMApp = new DMElement({
+            id: "DMApp"
+        })
+        
+        DMApp.appendChild(DMHelloWorld)
+    </code>
+    
+    Output:
+    <div id="DMApp_1">hello world</div>
+    
+    Let's give it a little bit of programmatic CSS. CSS should be done in a stylesheet unless it's being changed.
+    <code>
+        DMApp.style().backgroundColor = "#BBB"
+        DMHelloWorld.style().display = "inline"
+        DMHelloWorld.style().border = "1px solid #222"
+    </code>
+    
+    Note that you must use style as a function: .style()
+    
+    Output:
+    <div id="DMApp_2" style="background-color: #BBB"><div style="display: inline; border: 1px solid #222">hello world</div></div>
+    
+    Now let's move this to another div, named newDiv, but place it 10px from the right side of the newDiv
+    <code>
+        
+        var newDiv = new DMElement({
+            id: "newDiv"
+        })
+        
+        newDiv.addRelativeWrap()
+        newDiv.add(DMHelloWorld)
+        DMHelloWorld.style().right = "10px"
+        
+        //&ltdiv id="newDiv" style="background-color: red; width: 200px; height: 100px;"&gtThis is a new div&lt/div&gt
+    </code>
+    
+    <div style="background-color: #BBB"></div>
+    <div style="background-color: red; width: 200px; height: 100px;">
+        This is a new div
+        <div style="position: relative">
+            <div style="display: inline; border: 1px solid #222; position: absolute; right: 10px;">hello world</div>
+        </div>
+    </div>
+    
+    WOOO! So what's this new thing? addRelativeWrap appends a div to the inside of the element with the display: relative attribute. This
+    gives position: absolute to anything added (if it doesn't already have it) and allows it to be manipulated in reference to the parent object. 
+    Note two things: (1) you can only use .add() when relativeWrap is added and (2) anything added before the relativeWrap ("This is a new div") 
+    will still display before anything added using .add()
+    
+    <p>
+        Ok, the DMElements are great, but what if we want to write some custom methods for our objects?
+        Welcome to OOP land!
+        
+        We'll start with this HTML (and a little unseen CSS):
+        
+        <code>
+        &ltdiv id="DMApp"&gt
+            &ltdiv id="box1" class="Box"&gt&lt/div&gt
+            &ltdiv id="box2" class="Box"&gt&lt/div&gt
+            &ltdiv id="doug" class="Person"&gt&lt/div&gt
+        &lt/div&gt
+        </code>
+        
+        We could write some code defining the box and person (extending from the DMElement or other class).
+        
+        <code>
+            dm.createClass("Box")
+            dm.extend("Box","DMElement")
+            
+            dmc("Box").prototype.addPerson = function(person) {
+                this.style().backgroundColor = "#9F9"
+                this.appendChild(person)
+            }
+            
+            boxA = dm("boxA")
+            boxB = dm("boxB")
+            doug = dm("doug") //not defined, so this will have DMElement methods
+            boxB.addPerson(doug)
+        </code>
+    </p>
+</div>
+    <p id="part2">
+        Part Dos: 
+        OOP
+    </p>
+    <div>
+        Gonna skip over the manual way and dive into the easy way (using dm functions), first. Let's look use the same example and go line by line.
+        <code>dm.createClass("Box")</code>
+        This creates a class and sets the constructor to the name to the string in a protected dictionary object, _cls
+        <code>dm.extend("Box","DMElement")</code>
+        Copies all methods (including initialization methods) to the Box class, from the DMElement class.
+        <code>dmc("Box")</code>
+        Returns the constructor from the _cls object. If we had written the class manually, we would be able to reference it as Box, however
+        this way opens up more opportunities with less complexity. Usually, you would create a class and add methods with:
+        <code>function Box(){
+            //some initial code
+        }
+        Box.prototype.addPerson = function() {
+            //some code to add a person
+        }
+        </code>
+        Since dmc(string) (dmc is for DMClass, not the band) returns the constructor, to add a method using this way, you would write:
+        <code>
+            dm.createClass("Box")
+            dmc("Box").prototype.addPerson = function() {
+                //some code to add a person
+            }
+        </code>
+        It may not seem like much now, but I can assure you this adds much more functionality in way less code.
+        To refresh your memory, this is what our HTML looks like:
+        <code>
+            &ltdiv id="DMApp">
+                &ltdiv id="boxA" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px">&ltdiv>
+                &ltdiv id="boxB" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px">&lt/div>
+                &ltdiv id="doug" class="Person">Doug&lt/div>
+            &lt/div>
+        </code>
+        Let's send doug back in time! (to 90s style CSS). Anyone who surfed AOL in the 90s has scene this cutting edge pinnacle of artistic
+        expression, the blink. Well, the &ltblink&gt tag has been deprecated, so we will create it with this code:
+        <code>
+            Person = dmc("Person")
+            Person.prototype.main = function() {
+                this.backInTime()
+                //call .main() in super class. will explain in next section
+            }
+            Person.prototype.backInTime = function() {
+                this.innerHTML("<blink>"+this.innerHTML()+"</blink>")
+                this.style().backgroundColor = "red" //since most browsers don't acknowledge the blink tag
+            }
+            
+            var doug = dm("doug")
+        </code>
+        <div>
+            <div style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+            <div style="border: 1px solid black; background-color: #9f9; width: 50px; height: 50px">
+                <div style="background-color: red">
+                    <blink>Doug</blink>
+                </div>
+            </div>
+        </div>
+        Note the alternate way to define methods without having pain of using your shift key for quotes and parenthesis. dmc(string)
+        returns the constructor, so you may use that also.
+        
+        Also, notice that the .main() function has been used. All classes inherting from the DMObject contain a .main() method. DMElement
+        classes have init() and query() methods, used for instantiating programmatically and instantiating from HTML, respectively. These
+        all end with running the main() method which has code used in common between the two.
+        
+        When overriding a method of a superclass, we want to make sure we call the super class. This can be done a couple ways:
+        
+        directly
+        <code>
+        Person.prototype.main = function(){
+            this.backInTime()
+            dmc("DMElement").prototype.main.call(this)
+        }
+        </code>
+        The call(this) method is a DOM function that calls that method on the argument, this. So, in other words, the function at
+        DMElement.prototype.main will be called with this defined as the instance of Person.
+        <p></p>
+        
+        using the override dm function
+        <code>
+        Person.prototype.main = dm.override("DMElement","main",function(){
+            this.backInTime()
+        })
+        </code>
+        This function calls the super function so that you don't forget to. AT THIS TIME, these do not support arguments.
+        <p></p>
+        Lastly, the very specialized versions of the commonly used override functions. We'll get into these in more detail, but the three
+        are: main(), init(), and query(). In short, init() is used for programmatically instantiating, query() for instantiating from HTML
+        using dmc(idString), and main() which is called regardless after the init() or query() methods. Also, main() is the only one in the
+        king of all classes, DMClass.
+        dm.main() can be used for the special case of overriding DMElement's (and only DMElement's) .main()
+        <code>  
+        Person.prototype.main = dm.main(function(){
+            //alert("person")
+            this.backInTime()
+        })
+        </code>
+        
+        
+        SO, anyways, .backInTime() seems like such a useful method. Why not apply it to other elements!? That brings me to the next subject, casting
+        
+        Casting allows you to use certain methods from another class on your object. Keep in mind that this WILL NOT run initializing
+        methods, so you can only use methods that don't rely on any properties defined in them.
+        
+        We can send a box back to the nineties by adding the following code:
+        <code>
+        boxPerson = dm.cast("boxA","Person")
+        boxA.addPerson(doug)
+        boxPerson.backInTime()
+        </code>
+        Note that it can be referred to as either boxPerson or boxA and we can use both sets of methods.
+        <div style="border: 1px solid black; background-color: red; width: 50px; height: 50px">
+            <div>Doug</div>
+        </div>
+        <div style="border: 1px solid black; background-color: #9F9; width: 50px; height: 50px"></div>
+        
+        But the other box doesn't know it lost it's doug! It's still green. It should be blue, as is anything without doug. We'll change that
+        and learn about click events in the next section!
+    </div>
+    
+    <p id="part3">
+        Page 3: 
+        Click Events
+    </p>
+    
+    <div id="DMApp">
+        <div id="boxA" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="boxB" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="doug" class="Person">Doug</div>
+        <div id="buttonA" class="DMButton">toggle</div>
+    </div>
+    
+    
+</div>
+
+</body>
+</html>
