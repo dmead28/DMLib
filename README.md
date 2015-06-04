@@ -1,6 +1,6 @@
 # DMLib
+##(Under construction)
 Doug Mead
-(Under construction)
 
 In the meantime you can explore dmlib.core.js which brings everything together, DMElement.js which is the original wrapped DOMElement which the others inherit from, and other files (either works in progress or soon to be deprecated)
 
