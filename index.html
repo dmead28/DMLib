@@ -19,11 +19,11 @@
         
         dm.type("Box","div")
         dm.main("Box", function() {
-            alert("Main")
+            //alert("Main")
         })
         
         dm.method("Box", "addPerson", function() {
-            alert("ADD")
+            //alert("ADD")
         })
         
         boxA = _new("Box",{
@@ -33,10 +33,14 @@
         })
         boxA.addPerson()
         boxA.speak()
+        DMApp.appendChild(boxA)
         
         boxB = dm("boxB")
         boxB.addPerson()
         boxB.speak()
+        boxB.innerHTML("BoxB")
+        DMApp.appendChild(boxB)
+        
         
         dm.createDME("Person","div",function(args){
             this.name = args
@@ -46,14 +50,27 @@
             this.innerHTML(this.name)
         })
         
-        doug = dm("doug","doug")
+        doug = dm("doug","dougie")
+        
         
         mead = _new("Person","Mead")
+        
         mead.speak()
         doug.speak()
         DMApp.appendChild(mead)
-        DMApp.appendChild(boxA)
         
+        dm.createDME("DMButton","div",function(args){
+            //this.innerHTML("This is a button")
+            alert("main")
+        })
+        
+        button = dm("buttonA")
+        button.innerHTML("hey")
+        
+        buttonA = _new("DMButton")
+        buttonA.innerHTML("dougie")
+        
+        DMApp.appendChild(buttonA)
     }
         
     blah = function() {

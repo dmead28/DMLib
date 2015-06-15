@@ -5,7 +5,7 @@ var _cls = new Object() //DMClassObj stores all classes to a string representing
 
 //*DMObj, the king object
 function DMObj() {}
-DMObj.prototype.main = function(){}
+DMObj.prototype.main = function(){alert("Did not override DMObj.main() function")}
 _cls["DMObj"] = DMObj
 
 //*dm functions
@@ -34,7 +34,9 @@ dm.method = function(DMClass, methodStr, newMethod) {
 }
 //**creates an empty class in the _cls object
 dm.createClass = function(_dmcString) {
-    _cls[_dmcString] = function() {}
+    _cls[_dmcString] = function() {
+        //something
+    }
     return _cls[_dmcString]
 }
 dm.cast = function(_id,_toDMClass) {
@@ -46,23 +48,26 @@ dm.cast = function(_id,_toDMClass) {
 dm.proto = function(_DMClass) {
     protoDOMElement = document.getElementById(_DMClass)
     innerHTMLString = protoDOMElement.innerHTML
+    alert('break')
     
     dm.createClass(_DMClass)
     dm.extend(_DMClass,"DMElement")
     dmc(_DMClass).prototype.make = function(_args) {
         DMElement.prototype.make.call(this,{
             DMClass: _DMClass,
-            type: _args.type,
-            idNum: _args.idNum
+            type: "div"
         })
+        
         _currentIDNum = this.getIDNum()
         _currentIDNumString = "_" + _currentIDNum + ""
-        
+        //innerHTMLString = '<div id="doug_##_1" class="Person">doug A</div><div id="doug_##_2">doug B</div>'
         newStr = innerHTMLString.replace(/_##/g,_currentIDNumString)
+        alert(newStr)
+        //get this.idNum
+        //replace $$$ in object string with the idNum
+        //set innerHTML to the string
         
         this.innerHTML(newStr)
-        
-        ProtoArea.appendChild(this)
     }
     
     return dmc(_DMClass)
@@ -99,6 +104,9 @@ dm._new = function(_DMClass,_args) {
 }
 //**subclasses. uses the subClass method for legacy support
 dm.extend = function(_DMClass,_from) {
+    //_cls[_DMClass].superClass = _from
+    //subClass(_cls[_DMClass],_cls[_from])
+    
     function _subclass() {};
     _subclass.prototype = _cls[_from].prototype;
     _cls[_DMClass].prototype = new _subclass
@@ -115,6 +123,71 @@ dm.cast = function(_idString,_DMClass) {
 dm.superMethod = function(_DMClass, _method) {
     alert("deprecated.. doesn't save time or space, and takes more processing")
     return dmc(_DMClass).prototype[_method]
+}
+//**override superclass
+dm.override = function(_from, _method, _func){
+    
+    /*
+    alert("deprecated.. doesn't save time or space, and takes more processing")
+    function tempFunc() {}
+    
+    superCl = dmc(_from)
+    tempFunc.prototype = superCl.prototype
+    
+    superClMethod = tempFunc.prototype[_method]
+    
+    return function() {
+        _func.call(this)
+        tempFunc.prototype[_method].call(this)
+    }
+    */
+        /*
+    if (hasArgs == undefined || hasArgs == false) {
+        //alert(hasArgs)
+        return function() {
+            subClMethod.call(this)
+            superClMethod.call(this)
+        }
+    } else if (hasArgs != undefined && hasArgs == true) {
+        alert("yup")
+        return function(_args) {
+            subClMethod.call(this,_args)
+            superClMethod.call(this,_args)
+        }
+    } else {
+        alert("Error in dm.override()\nCheck your arguments usage.")
+    }
+    */
+}
+//**main shortcut class
+dm.main = function(_DMClass, _func) {
+    dm.method(_DMClass,"main", function() {
+        _func.call(this)
+        DMElement.prototype.main.call(this)
+    })
+}
+dm.init = function(_DMClass, _func) {
+    dm.method(_DMClass,"init", function() {
+        DMElement.prototype.init.call(this,{
+            DMClass: _DMClass
+        })
+        _func.call(this)
+    })
+}
+dm.type = function(DMClass, typeString) {
+    dm.method(DMClass,"init", function() {
+        _args = {}
+        _args.type = typeString
+        _args.DMClass = DMClass
+        DMElement.prototype.init.call(this,_args)
+        //this.main()
+    })
+}
+dm.createDME = function(_DMClass, typeString, mainFunc) {
+    dm.createClass(_DMClass)
+    dm.extend(_DMClass, "DMElement")
+    dm.type(_DMClass, "div")
+    dm.main(_DMClass, mainFunc)
 }
 //*subclass function for legacy support
 function subClass(classA,fromClassB) {
@@ -147,6 +220,7 @@ dm.extend("DMElement","DMObj")
 //*THREE INITIAL methods done incorrectly (quick fix for compatibility)
 DMElement.prototype.make = function(obj$type_idNum_DMClass) {
     _args = obj$type_idNum_DMClass
+    
     if (_args != undefined) {
         if (_args.type || _args.idNum || _args.DMClass) {
             _args.type    ? _type = _args.type : _type = DEFAULT_TYPE;
@@ -167,15 +241,19 @@ DMElement.prototype.make = function(obj$type_idNum_DMClass) {
         _type = DEFAULT_TYPE;
         _idNum = DEFAULT_IDNUM();
         _DMClass = DEFAULT_DMCLASS;
+        
         this._element = document.createElement(_type);
         this.setDMClass(_DMClass);
         this.idNum = _idNum;
+        
         this.setID(this.DMClass+'_'+this.idNum);
+        
         this.innerHTML(DEFAULT_TEXT);
     }
 }
 DMElement.prototype.query = function(_id) {
     this._element = document.getElementById(_id);
+    console.log(_id)
     this._DMClass = this._element.className;
     this.setDMClass(this._DMClass);
     
@@ -197,16 +275,32 @@ DMElement.prototype.appendChild = function(_newChildDM) {
     newChild = _newChildDM._element;
     this._element.appendChild(newChild);
 }
-DMElement.prototype.addRelativeWrap = function() { //addRelativeWrap() makes manipulating the position of child elements easier
-    //needs to actually add the relative wrap
-    this.style().position = "relative"
+DMElement.prototype.parentNode = function() {
+    return this._element.parentNode;
 }
-DMElement.prototype.add = function(_newDMEChild) { //adds to relativeWrap
-    if (_newDMEChild.style().position != "absolute") {_newDMEChild._element.style.position = "absolute"}
-    this.appendChild(_newDMEChild) //needs to add to the relative wrap
-};
-DMElement.prototype.speak = function() {
-    alert("DMElement: "+this.getID())
+DMElement.prototype.getParent = function() {
+    _parentNode = this.parentNode();
+    _parentNode_id = _parentNode.getAttribute('id');
+    _parentDMElement = DMRegistry.findDMElement(_parentNode_id);
+    
+    return _parentDMElement;
+}
+DMElement.prototype.childNodes = function() { //gets childNodes as [HTMLElement]
+    return this._element.childNodes;
+}
+DMElement.prototype.getChildren = function() { //gets children (childNodes) as [DMElement]
+    _childNodes = this.childNodes();
+    _childrenArr = new Array();
+    
+    for (r=0;r<_childNodes.length;r++) {
+        _currentNode = _childNodes[r];
+        _currentNode_id = _currentNode.getAttribute('id');
+        _currentDMElement = DMRegistry.findDMElement(_currentNode_id);
+        
+        _childrenArr[r] = _currentDMElement;
+    }
+    
+    return _childrenArr;
 }
 DMElement.prototype.setAttribute = function(name,value) {
     this._element.setAttribute(name,value);
@@ -216,6 +310,14 @@ DMElement.prototype.getAttribute = function(name) {
 }
 DMElement.prototype.nextSibling = function() {
     return this._element.nextSibling;
+}
+DMElement.prototype.after = function(_DMElementAfter) {
+    parentElement = _DMElementAfter.parentNode();
+    parentElement.insertBefore(this._element, _DMElementAfter.nextSibling());
+}
+DMElement.prototype.before = function(_DMElementBefore) {
+    parentElement = _DMElementBefore.parentNode();
+    parentElement.insertBefore(this._element, _DMElementBefore._element);
 }
 DMElement.prototype.style = function() {
     return this._element.style
@@ -242,6 +344,7 @@ DMElement.prototype.setIDNum = function(_idNum) {
 }
 DMElement.prototype.setID = function(_id) {
     console.log('DMElement.setID() running. Has not been properly debugged');
+    
     if (this.getID() == undefined) {
         this.setAttribute('id',_id);
     } else {
@@ -259,7 +362,28 @@ DMElement.prototype.getIDNum = function() {
     _myID = this.getAttribute('id');
     _myIDArr = _myID.split('_');
     this.IDNum = _myIDArr[1];
+    
     return this.IDNum;
+}
+DMElement.prototype.addRelativeWrap = function() { //addRelativeWrap() makes manipulating the position of child elements easier
+    /*
+    this.DMRelativeWrap = _new("DMElement",{
+        type: 'div',
+        idNum: this.getID(),
+        DMClass: 'relativeWrap'
+    })
+    */
+    this.style().position = "relative"
+    //this.appendChild(this.DMRelativeWrap)
+}
+DMElement.prototype.add = function(_newDMEChild) { //adds to relativeWrap
+    //if (this.DMRelativeWrap == undefined) {alert('Error: cannot use DMElement.add() without adding RelativeWrap')}
+    if (_newDMEChild.style().position != "absolute") {_newDMEChild._element.style.position = "absolute"}
+    //this.DMRelativeWrap.appendChild(_newDMEChild)
+    this.appendChild(_newDMEChild)
+};
+DMElement.prototype.speak = function() {
+    alert("DMElement: "+this.getID())
 }
 //*EVENTS
 DMClickArr = new Array()
@@ -273,10 +397,14 @@ DMElement.prototype.onClick = function(fxn,_delegate) {
         clickDMElement = _delegate
         clickDMElement.target = this
     }
+    
     clickID = this.getID();
     DMClickArr.push({ID: clickID, DMTarget: clickDMElement, clickFxn: fxn});
+    
     this.addEventListener('click',function(e) {
+        
         testID = e.target.getAttribute('id');
+        
         for (i=0;i<DMClickArr.length;i++) {
             currentClickObj = DMClickArr[i];
             currentID = currentClickObj.ID;
@@ -291,14 +419,22 @@ DMElement.prototype.onClick = function(fxn,_delegate) {
     });
 }
 
+
+
 //DMRegistry
 //old. need to rework this. still has dependencies
 function DMRegistry() {
+    
+    //this will eventually be "SMART"-er
+    //it should organize into classes
+    
     //should use database at some point.. probably once i know it's compatible at work
+    
     this._arr = new Array();
 }
     DMRegistry.prototype.add = function(obj$id_DMElement) {
         //add bug catchers
+        
         this._arr.push(obj$id_DMElement);
         index = this._arr.length - 1;
         
@@ -329,7 +465,10 @@ function DMRegistry() {
     }
     DMRegistry.prototype.find = function(_id) {
         //searches for _id and returns the whole obj {index, id, DMElement}
+        //alert('finding id: '+_id);
+        //console.log('DMRegistry.find(_id) has not yet been debugged. May not even work');
         //add bug catchers
+        
         outputObj = null;
         
         for (i=0;i<this._arr.length;i++) {
@@ -354,6 +493,8 @@ function DMRegistry() {
         }
     }
     DMRegistry.prototype.replaceID = function(obj$newID_oldID) {
+        //alert('replaceID is called');
+        //console.log('DMRegistry.replace(obj$newID_oldID) has not yet been debugged. May not even work');
         //add bug catchers
         oldID = obj$newID_oldID.oldID;
         newID = obj$newID_oldID.newID;
@@ -368,11 +509,19 @@ function DMRegistry() {
         }
     }
     DMRegistry.prototype.set = function(obj$index_id_DMElement) {
+        //console.log('DMRegistry.set(obj$index_id_DMElement) has not yet been debugged. May not even work');
         //add bug catchers
+        
         _index = obj$index_id_DMElement.index;
         _id = obj$index_id_DMElement.id;
         _DMElement = obj$index_id_DMElement.DMElement;
         
         this._arr[_index] = {id: _id, DMElement: _DMElement};
     }
+    
 var DMRegistry = new DMRegistry()
+
+
+
+
+
