@@ -1,3 +1,5 @@
+//Made by Doug Mead
+
 //OOP
 
 //*object associating all constructors with string representations
@@ -13,7 +15,7 @@ function dm(_id,_args) {
     if (document.getElementById(_id) != undefined) {
         _element = document.getElementById(_id);
     } else {
-        alert("Error: id not found")
+        alert("Error: id not found\nid: "+_id+"\nargs: "+_args+"")
     }
     _DMClass = _element.getAttribute("class") ? _element.getAttribute("class") : "DMElement";
     
@@ -44,12 +46,10 @@ dm.cast = function(_id,_toDMClass) {
     return _newObj
 }
 dm.proto = function(_DMClass) {
-    protoDOMElement = document.getElementById(_DMClass)
-    innerHTMLString = protoDOMElement.innerHTML
-    
     dm.createClass(_DMClass)
     dm.extend(_DMClass,"DMElement")
-    dmc(_DMClass).prototype.make = function(_args) {
+    _cls[_DMClass].innerHTMLString = document.getElementById(_DMClass).innerHTML
+    _cls[_DMClass].prototype.make = function(_args) {
         DMElement.prototype.make.call(this,{
             DMClass: _DMClass,
             type: _args.type,
@@ -58,9 +58,7 @@ dm.proto = function(_DMClass) {
         _currentIDNum = this.getIDNum()
         _currentIDNumString = "_" + _currentIDNum + ""
         
-        newStr = innerHTMLString.replace(/_##/g,_currentIDNumString)
-        
-        this.innerHTML(newStr)
+        this.innerHTML(_cls[_DMClass].innerHTMLString.replace(/_##/g,_currentIDNumString))
         
         ProtoArea.appendChild(this)
     }
@@ -269,6 +267,7 @@ DMElement.prototype.addEventListener = function(_type,_listener,_useCapture) {
 DMElement.prototype.onClick = function(fxn,_delegate) {
     if (_delegate == undefined) {
         clickDMElement = this
+        clickDMElement.target = this
     } else {
         clickDMElement = _delegate
         clickDMElement.target = this
