@@ -7,8 +7,8 @@ In the meantime you can explore dmlib.core.js which brings everything together, 
 #dmlib core
 dmlib.core.js contains a refined version of DMElement and OOP methods.
 
-#index.htlm
-Documentation that I am working on. Needs much refining (working copy)
+#index.html and testPage.html
+Documentation that I am working on. Needs much refining (working copy). testPage.html is what I use to test features as I add them. It does not have much in terms of documentation, but is more accurate and updated.
 
 #DMElement (old version)
 The other files are mainly shortcuts to specific DMElements like: DMButton, DMImage, etc.
