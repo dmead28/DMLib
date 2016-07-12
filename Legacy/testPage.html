@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DMLib Example</title>
+    <link rel="stylesheet" type="text/css" href="dmlib.css" />
+    <link rel="stylesheet" type="text/css" href="dmlib.css" />
+    
+    <script type="text/javascript" src="dmlib.core.js"></script>
+    <script type="text/javascript" src="Box.js"></script>
+    
+    <script type="text/javascript">
+        
+    window.onload = function() {
+        DMApp = dm("DMApp")
+        
+        var boxA = dm("boxA")
+        var boxB = dm("boxB")
+        var doug = dm("doug")
+        
+        var button = dm("button")
+        
+        doug.speak("to you")
+        button.yo()
+        
+        buttonA = new DMButton()
+        buttonA.make({
+            DMClass: "DMButton"
+        })
+        DMApp.appendChild(buttonA)
+        buttonA.innerHTML("buttonA")
+        
+        buttonA.yo()
+        
+        DMApp_S = dm.cast("DMApp","DMSandbox")
+        DMApp_S.animate("boxB",55)
+        
+        boxB.innerHTML("<div id='blah' onload='dmalert()'>hey</div>")
+        
+        blah = dm("blah")
+        blah.innerHTML("written by blah")
+        
+        
+        Proto = dm.proto("BoxPerson")
+        Proto.prototype.speak = function() {
+            this.doug1 = dm("Person_" + this.getIDNum())
+            this.doug1.innerHTML("SPEAKING")
+        }
+        
+        proto1 = _new("BoxPerson")
+        DMApp.appendChild(proto1)
+        proto1.speak()
+    }
+    
+    
+    dm.createClass("Person")
+    dm.extend("Person","DMElement")
+    dm.method("Person","speak",function(sayStr) {
+        this.innerHTML(this.innerHTML() + " HELLO: " + sayStr)
+    })
+    dm.method("Person","yo",function(){
+        this.innerHTML("yo")
+    })
+    
+    
+    dm.createClass("Box")
+    dm.extend("Box","DMElement")
+    dmc("Box").prototype.main = function() {
+        this.hasPerson = false
+        this.person = null
+        
+        this.innerHTML("created in Box.main()")
+    }
+    dmc("Box").prototype.addPerson = function(person) {
+        this.style().backgroundColor = "#9F9"
+        this.appendChild(person)
+        this.hasPerson = true
+        this.person = person
+    }
+    dmc("Box").prototype.removePerson = function() {
+        this.style().backgroundColor = "#99F"
+        this.hasPerson = false
+        
+        person = this.person
+        this.person = null
+        
+        return person
+    }
+    
+    
+    dm.createClass("DMButton")
+    dm.extend("DMButton","DMElement")
+    DMButton = dmc("DMButton")
+    DMButton.prototype.yo = function() {
+        console.log(this.getID() + " says YOOO")
+    }
+    
+    dm.createClass("DMAnimate")
+    dm.extend("DMAnimate","DMElement")
+    DMAnimate = dmc("DMAnimate")
+    DMAnimate.prototype.moveTo = function(newX) {
+        this.style().position = "absolute"
+        this.style().left = newX + "px"
+    }
+    
+    DMSandbox = dm.createClass("DMSandbox")
+    dm.extend("DMSandbox","DMElement")
+    //DMSandbox = dmc("DMSandbox")
+    DMSandbox.prototype.animate = function(_id,_toNewX) {
+        animating = dm(_id)
+        this.addRelativeWrap()
+        animating.style().position = "absolute"
+        animating.style().left = _toNewX+"px"
+        animating.style().top = "0px"
+    }
+    
+    
+    </script>
+</head>
+
+<body>
+    
+    <div id="DMApp">
+        <div id="boxA" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="boxB" class="Box" style="border: 1px solid black; background-color: #99C; width: 50px; height: 50px"></div>
+        <div id="doug" class="Person">Doug</div>
+        <div id="button" class="DMButton">Switch</div>
+    </div>
+    
+    <div id="protoArea" style = "background-color: #99F">
+        <div id="BoxPerson" class="BoxPerson">
+            <div id="Box_##" class="Box" style="border: 1px solid black; background-color: #C99; width: 150px; height: 150px">proto box</div>
+            <div id="Person_##" class="Person" style="border: 1px dotted blue; background-color: #CCC; width: 150px; height: 50px">proto person</div>
+            <div id="DMButton_#X" class="DMButton">proto button</div>
+        </div>
+        
+    </div>
+    
+</div>
+
+</body>
+</html>
